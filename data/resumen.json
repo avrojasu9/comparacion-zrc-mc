@@ -1,0 +1,37 @@
+{
+  "proyecto": "Comparación ZRC Montaña Caucana",
+  "mapas_originales": [
+    "ZRC Polígono original",
+    "Polígono ANT 2022",
+    "Traslapes 2025",
+    "Polígono ANT 2025"
+  ],
+  "area_ant_2022_fuente_ha": 34284.17,
+  "area_ant_2025_fuente_ha": 51868.81,
+  "cambio_neto_atributos_ha": 17584.64,
+  "incorporado_2025_ha_calculada": 28241.32,
+  "retirado_2025_ha_calculada": 10755.86,
+  "conteo_zonas_copia_alternativa": 83,
+  "conteos_traslapes": {
+    "forestal": {
+      "en_contexto": 1,
+      "intersectan_2025": 1
+    },
+    "solicitudes": {
+      "en_contexto": 7,
+      "intersectan_2025": 2
+    },
+    "formalizados": {
+      "en_contexto": 33,
+      "intersectan_2025": 0
+    }
+  },
+  "notas": [
+    "El servicio de origen original ZRC_MC con item ID 13d92ee2ab634c67868c01544a4a24cc carece de exportación geográfica recuperable.",
+    "La vista de zonificación original se reconstruye con otra copia de ZRC_MC, ID 0b594f7a8a614e8f96ab10215ec6602f, que contiene 83 veredas y requiere cotejo con el original.",
+    "El mapa Traslapes 2025 muestra capas recortadas a la extensión de trabajo con 10 km de entorno, e informa si intersectan ANT 2025. No se confunde proximidad con traslape.",
+    "Las superficies originales proceden de los campos area_geome (2022) y AREA_HAS (2025) y pueden usar diferentes métodos de cálculo.",
+    "Los sectores incorporados y retirados se calculan por diferencia geométrica y en EPSG:3115; son estimaciones técnicas, no determinaciones jurídicas.",
+    "Las geometrías GeoJSON se simplificaron para visualización web. No deben utilizarse para cálculos de área oficiales."
+  ]
+}

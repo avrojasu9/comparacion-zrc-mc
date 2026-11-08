@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#17223e" />
+  <meta name="description" content="Comparación cartográfica de los escenarios territoriales de la ZRC Montaña Caucana: zonificación, ANT 2022, traslapes y ANT 2025." />
+  <title>Comparación ZRC Montaña Caucana | Visor territorial</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="./css/estilos.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="Inicio del visor">
+      <span class="brand-icon" aria-hidden="true"><svg viewBox="0 0 36 36" width="36" height="36" fill="none" aria-hidden="true"><path d="M6 7h11v21H6V7Z" stroke="#ffa081" stroke-width="2.2" stroke-linejoin="round"/><path d="M19 7h11v21H19V7Z" stroke="#c7beff" stroke-width="2.2" stroke-linejoin="round"/><path d="M9 19l4-5 3 4" stroke="#ffa081" stroke-width="1.6" stroke-linecap="round"/><path d="M22 17l3-3 3 5" stroke="#c7beff" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+      <span class="brand-copy"><small>ATLAS COMPARATIVO</small><strong>ZRC Montaña Caucana</strong></span>
+    </a>
+    <div class="topbar-right"><span>Comparación de escenarios</span><span class="pill-light">VISOR WEB · EDICIÓN ÍNDIGO</span></div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" aria-label="Opciones y consulta cartográfica">
+      <section class="intro">
+        <div class="eyebrow"><span class="eyebrow-bar"></span> COMPARACIÓN CARTOGRÁFICA</div>
+        <h1>Comparación <em>ZRC MC.</em></h1>
+        <p>Cambios en el polígono de constitución de Zona de Reserva Campesina de la Montaña Caucana</p>
+        <div class="hint"><span aria-hidden="true">◎</span><span>Desplaza un mapa y los demás seguirán la misma ubicación y escala.</span></div>
+      </section>
+
+      <section class="section">
+        <div class="section-title"><h2>Explorar los mapas</h2><button type="button" id="reset-view" class="text-btn">Vista inicial</button></div>
+        <label for="base-select">Mapa base</label>
+        <select id="base-select"><option value="satelite">Imagen satelital (Esri World Imagery)</option><option value="osm">OpenStreetMap</option><option value="sin">Sin mapa base</option></select>
+        <label for="search-text">Buscar vereda o municipio</label>
+        <div class="search"><input id="search-text" type="search" placeholder="Escribe una vereda..." autocomplete="off"/><button type="button" id="search-button" aria-label="Buscar">⌕</button></div>
+        <div id="search-results" class="search-results" hidden></div>
+      </section>
+
+      <section class="section">
+        <div class="section-title"><h2>Capas de contexto</h2></div>
+        <label class="check"><input id="layer-municipios" type="checkbox" checked /><span>Límites municipales</span><i class="symbol municipal"></i></label>
+        <label class="check"><input id="layer-veredas" type="checkbox" /><span>Límites veredales</span><i class="symbol veredal"></i></label>
+        <label class="check"><input id="layer-labels" type="checkbox" /><span>Nombres de veredas (zoom 11+)</span><i class="symbol textlabel">A</i></label>
+        <p class="small-note">Estas capas se muestran simultáneamente en los cuatro mapas. Las etiquetas están desactivadas al iniciar.</p>
+      </section>
+
+      <section class="section">
+        <div class="section-title"><h2>Capas de traslapes</h2></div>
+        <p class="section-sub">Se utilizan cuando seleccionas «Traslapes 2025» en cualquier panel.</p>
+        <label class="check"><input id="layer-forestal" type="checkbox" checked /><span>Reserva Forestal · Ley Segunda</span><i class="symbol forest"></i></label>
+        <label class="check"><input id="layer-solicitudes" type="checkbox" checked /><span>Solicitudes indígenas</span><i class="symbol claim"></i></label>
+        <label class="check"><input id="layer-formalizados" type="checkbox" checked /><span>Resguardos formalizados</span><i class="symbol formal"></i></label>
+        <p class="small-note">Se representa el contexto cercano al polígono ANT 2025; una capa próxima no implica necesariamente un traslape.</p>
+      </section>
+
+      <section class="section detail-section" aria-live="polite">
+        <div class="section-title"><h2>Información seleccionada</h2><span class="tiny-tag" id="selection-type">SIN SELECCIÓN</span></div>
+        <div id="detail"><p class="empty-message">Haz clic sobre un polígono coloreado para consultar su nombre, superficie o relación con el escenario ANT 2025.</p></div>
+      </section>
+      <footer class="side-foot">Fuentes: respaldo ArcGIS Online de la ZRC MC. Datos simplificados para visualización. <strong>Interpretación cartográfica de referencia; contrastar con fuentes oficiales.</strong></footer>
+    </aside>
+
+    <main class="main" id="main">
+      <div class="toolbar">
+        <div class="heading"><small>ANÁLISIS COMPARATIVO · CAUCA</small><h2>Cuatro lecturas del territorio</h2></div>
+        <div class="toolbar-right"><div class="view-switch" role="group" aria-label="Modo de visualización"><button id="mode-four" type="button" class="active" aria-pressed="true">4 mapas</button><button id="mode-one" type="button" aria-pressed="false">Mapa único</button></div></div>
+      </div>
+      <div class="stats">
+        <div class="stat"><span>SUPERFICIE ANT 2022</span><strong id="stat-2022">—</strong><small>hectáreas del atributo fuente</small></div>
+        <div class="stat"><span>SUPERFICIE ANT 2025</span><strong id="stat-2025">—</strong><small>hectáreas del atributo fuente</small></div>
+        <div class="stat positive"><span>CAMBIO NETO REPORTADO</span><strong id="stat-cambio">—</strong><small>2025 respecto a 2022</small></div>
+      </div>
+      <div class="maps" id="maps" aria-label="Mapas territoriales sincronizados">
+        <section class="map-card" id="map-card-0">
+          <div class="map-header"><div><span class="map-num">01</span><strong id="map-title-0">ZRC Polígono original</strong></div><label class="map-choice">Visualización<select id="scenario-0" aria-label="Contenido del mapa 1"></select></label></div>
+          <div class="map-surface"><div id="map-0" class="map" role="application" aria-label="Mapa 1"></div><div id="legend-0" class="legend"></div></div>
+        </section>
+        <section class="map-card" id="map-card-1">
+          <div class="map-header"><div><span class="map-num">02</span><strong id="map-title-1">Polígono ANT 2022</strong></div><label class="map-choice">Visualización<select id="scenario-1" aria-label="Contenido del mapa 2"></select></label></div>
+          <div class="map-surface"><div id="map-1" class="map" role="application" aria-label="Mapa 2"></div><div id="legend-1" class="legend"></div></div>
+        </section>
+        <section class="map-card" id="map-card-2">
+          <div class="map-header"><div><span class="map-num">03</span><strong id="map-title-2">Traslapes 2025</strong></div><label class="map-choice">Visualización<select id="scenario-2" aria-label="Contenido del mapa 3"></select></label></div>
+          <div class="map-surface"><div id="map-2" class="map" role="application" aria-label="Mapa 3"></div><div id="legend-2" class="legend"></div></div>
+        </section>
+        <section class="map-card" id="map-card-3">
+          <div class="map-header"><div><span class="map-num">04</span><strong id="map-title-3">Polígono ANT 2025</strong></div><label class="map-choice">Visualización<select id="scenario-3" aria-label="Contenido del mapa 4"></select></label></div>
+          <div class="map-surface"><div id="map-3" class="map" role="application" aria-label="Mapa 4"></div><div id="legend-3" class="legend"></div></div>
+        </section>
+      </div>
+      <div class="footline"><span>En cada mapa puedes elegir su contenido. También está disponible «Cambios 2022–2025».</span><span>Superficies indicativas · comparar con fuentes oficiales antes de usar para decisiones</span></div>
+    </main>
+  </div>
+  <div id="error" class="error" role="alert" hidden></div>
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="anonymous"></script>
+  <script src="./data/datos_integrados.js" defer></script>
+  <script src="./js/visor.js" defer></script>
+</body>
+</html>
